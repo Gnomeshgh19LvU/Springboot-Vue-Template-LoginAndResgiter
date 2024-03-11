@@ -1,26 +1,33 @@
 package com.Ma.config;
 
 import com.Ma.entity.RestBean;
+import com.Ma.service.AuthorizeService;
 import com.alibaba.fastjson.JSONObject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+
+    @Autowired
+    AuthorizeService authorizeService;
+
+
     /**
      * 配置安全过滤链
      *
@@ -54,6 +61,8 @@ public class SecurityConfiguration {
                 .logoutUrl("/api/auth/logout")
                 .and()
 
+
+
                 /**
                  * 禁用CSRF保护：基于当前配置需求，可能出于简化或特定安全考虑
                  */
@@ -67,6 +76,30 @@ public class SecurityConfiguration {
                 .authenticationEntryPoint(this::onAuthenticationFailure)
                 .and()
                 .build();
+    }
+
+    /**
+     * 创建并配置认证管理器。
+     * 这个方法通过利用HttpSecurity来获取AuthenticationManagerBuilder实例，并基于授权服务(authorizeService)
+     * 来配置用户详细服务(userDetailsService)，然后构建并返回一个认证管理器(AuthenticationManager)。
+     *
+     * @param security HttpSecurity对象，用于获取AuthenticationManagerBuilder实例以进行配置。
+     * @return AuthenticationManager 一个配置好的认证管理器实例。
+     * @throws Exception 如果在构建认证管理器过程中发生错误。
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity security) throws Exception {
+        // 使用HttpSecurity配置AuthenticationManagerBuilder，并基于authorizeService配置用户详细服务
+        return security
+                .getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(authorizeService)
+                .and()
+                .build();
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 
