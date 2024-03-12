@@ -16,13 +16,27 @@
     <div class="welcome-title">
       <div style="font-size: 30px;font-weight: bold">欢迎来到我们的学习平台</div>
       <div style="margin-top: 10px">在这里你可以学习如何使用java，如何搭建网站。并且与java之父密切交流</div>
-      <div style="margin-top: 10px">在这里你可以同性交友，因为都是男的，没有学java的妹崽</div>
-
     </div>
 
     <!--    页面右边 ->登录页面-->
-    <div style="width: 400px;background-color: white;">
-      <router-view/>
+    <div style="width: 400px;background-color: white;z-index: 1">
+
+      <router-view v-slot="{ Component }">
+        <transition name="el-fade-in-linear">
+        <component :is="Component"/>
+        </transition>
+      </router-view>
+
+<!--      <router-view v-slot="{ Component }">-->
+<!--        <transition mode="out-in">-->
+<!--          <component :is="Component"/>-->
+<!--        </transition>-->
+<!--      </router-view>-->
+
+
+
+
+
     </div>
   </div>
 
