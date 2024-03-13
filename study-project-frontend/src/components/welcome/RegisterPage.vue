@@ -4,6 +4,8 @@ import {EditPen, Lock, Message, User} from "@element-plus/icons-vue";
 import router from "@/router/index.js";
 import {reactive, ref} from "vue";
 import {ElMessage} from "element-plus";
+import {post} from "@/net/index.js";
+
 
 const form = reactive({
     username : '',
@@ -76,7 +78,15 @@ const register = () => {
       ElMessage.warning('请填写完整信息')
     }
   })
-};
+}
+
+const validateEmail = () => {
+  post('/api/auth/valid-email',{
+    email: form.email
+  },(message) =>{
+    ElMessage.success(message)
+  })
+}
 
 </script>
 
@@ -143,7 +153,7 @@ const register = () => {
                 </el-input>
               </el-col>
               <el-col :span="5">
-                <el-button type="primary" style="width: 160%" :disabled="!isEmailValid">获取验证码</el-button>
+                <el-button @click="validateEmail" type="primary" style="width: 160%" :disabled="!isEmailValid">获取验证码</el-button>
               </el-col>
             </el-row>
 

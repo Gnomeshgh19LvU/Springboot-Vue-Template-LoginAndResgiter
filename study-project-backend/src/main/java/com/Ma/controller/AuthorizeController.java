@@ -3,7 +3,9 @@ package com.Ma.controller;
 import com.Ma.entity.RestBean;
 import com.Ma.service.AuthorizeService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +25,10 @@ public class AuthorizeController {
 
     @PostMapping("/valid-email")
     public RestBean<String> validateEmail(@Pattern(regexp = EMAIL_REGEX)
-                                              @RequestParam("email") String email) {
-        if (authorizeService.sendValidateEmail(email)) {
+                                          @RequestParam("email") String email,
+                                          HttpSession session) {
+
+        if (authorizeService.sendValidateEmail(email,session.getId())) {
             return RestBean.success("邮件已发送，请注意查收");
         } else {
             return RestBean.failure(400, "邮件发送失败，请联系管理员");
