@@ -64,6 +64,9 @@ const formRef = ref(null)
 
 const isEmailValid = ref(false)
 
+
+const coldTime = ref(0);
+
 const onValidate = (prop,isValid) => {
   if (prop === 'email') {
     isEmailValid.value = isValid
@@ -73,7 +76,15 @@ const onValidate = (prop,isValid) => {
 const register = () => {
   formRef.value.validate((isValid) =>{
     if (isValid) {
-        post('/')
+        post('/api/auth/register',{
+          username: form.username,
+          password: form.password,
+          email: form.email,
+          code: form.code
+        },(message) => {
+          ElMessage.success(message)
+          router.push('/')
+        })
     } else {
       ElMessage.warning('请填写完整信息')
     }
@@ -85,6 +96,8 @@ const validateEmail = () => {
     email: form.email
   },(message) =>{
     ElMessage.success(message)
+    coldTime.value = 60;
+    setInterval(() => coldTime.value--,1000);
   })
 }
 
@@ -153,7 +166,9 @@ const validateEmail = () => {
                 </el-input>
               </el-col>
               <el-col :span="5">
-                <el-button @click="validateEmail" type="primary" style="width: 160%" :disabled="!isEmailValid">获取验证码</el-button>
+                <el-button @click="validateEmail" type="primary" style="width: 160%"
+                           :disabled="!isEmailValid || coldTime >0">{{ coldTime > 0?'请稍后'+coldTime+ '秒':'获取验证码'}}</el-button>
+
               </el-col>
             </el-row>
 

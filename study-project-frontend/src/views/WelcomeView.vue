@@ -21,20 +21,13 @@
     <!--    页面右边 ->登录页面-->
     <div style="width: 400px;background-color: white;z-index: 1">
 
+
+
       <router-view v-slot="{ Component }">
-        <transition name="el-fade-in-linear">
-        <component :is="Component"/>
+        <transition name="el-fade-in-linear"  style="height: 100%"  mode="out-in">
+          <component :is="Component"/>
         </transition>
       </router-view>
-
-<!--      <router-view v-slot="{ Component }">-->
-<!--        <transition mode="out-in">-->
-<!--          <component :is="Component"/>-->
-<!--        </transition>-->
-<!--      </router-view>-->
-
-
-
 
 
     </div>
