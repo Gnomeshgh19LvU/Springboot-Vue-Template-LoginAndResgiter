@@ -1,4 +1,4 @@
-package com.Ma.entity;
+package com.Ma.entity.auth;
 
 import lombok.Data;
 

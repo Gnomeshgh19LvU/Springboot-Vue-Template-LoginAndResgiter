@@ -1,6 +1,6 @@
 package com.Ma.service.impl;
 
-import com.Ma.entity.Account;
+import com.Ma.entity.auth.Account;
 import com.Ma.mapper.UserMapper;
 import com.Ma.service.AuthorizeService;
 import jakarta.annotation.Resource;

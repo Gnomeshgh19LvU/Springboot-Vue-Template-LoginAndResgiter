@@ -1,6 +1,5 @@
 package com.Ma.service;
 
-import com.Ma.entity.Account;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AuthorizeService extends UserDetailsService {
